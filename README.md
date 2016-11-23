@@ -1,3 +1,4 @@
+<<<<<<< HEAD
 # Node Express app with nginx postgres nodemon dev cluster
 
 ## Prerequisites
@@ -77,3 +78,6 @@ Run `docker-compose build`. It will
 redis
 
 
+=======
+# docker-node-postgres-apache
+>>>>>>> origin/master
