@@ -4,6 +4,8 @@ newrelic_agent.log
 ._*
 Thumbs.db
 
+node/dashboard/*
+
 # Application specific files
 npm-debug.log
 #PHPStorm

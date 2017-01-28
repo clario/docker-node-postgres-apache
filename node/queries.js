@@ -14,14 +14,19 @@ function getAllLiceCoutings(req, res, next) {
 
     db.any('SELECT * FROM "lice_couting";')
         .then(function (data) {
-            res.status(200)
-                .json({
-                    status: 'success',
-                    data: data,
-                    message: 'Retrived all lice coutings',
-                    apidate: new Date(),
-                    total_objects: data.length
-                });
+           okResult(data,req,res,next,"Retrived all lice coutings ");
+        })
+        .catch(function (err) {
+            return next(err);
+        });
+
+};
+
+function getAllLiceTypeCouting(req, res, next) {
+
+    db.any('SELECT * FROM "lice_type_count";')
+        .then(function (data) {
+           okResult(data,req,res,next,"Retrived all lice type coutings ");
         })
         .catch(function (err) {
             return next(err);
@@ -30,7 +35,22 @@ function getAllLiceCoutings(req, res, next) {
 };
 
 
+
+function okResult(data,req,res,next,msg){
+     res.status(200)
+                .json({
+                    status: 'success',
+                    data: data,
+                    message: msg,
+                    apidate: new Date(),
+                    totalObjects: data.length
+                });
+}
+
+
+
 function getSingleLiceCouting(req, res, next) {
+    console.log("hellllo")
     var id = parseInt(req.params.id);
     console.log(id);
     db.one('select * from lice_couting where lice_count_id = $1', id)
@@ -54,50 +74,44 @@ function getSingleLiceCouting(req, res, next) {
 }
 
 
-function createLiceCouting(req, res, next) {
-   
-  req.body.temperature = parseInt(req.body.temperature);
-  req.body.latitue = parseFloat(req.body.latitue),
-  req.body.longitude =parseFloat(req.body.longitude),
-  req.body.lice_count =parseFloat(req.body.lice_count),
-  db.none('insert into lice_couting(date, temperature, latitude, longitude, lice_count, location_name)' +
-      'values(${date}, ${temperature}, ${latitude}, ${longitude},${lice_count},${location_name})',
-    req.body)
-    .then(function () {
-      res.status(200)
-        .json({
-          status: 'success',
-          message: 'Inserted one lice count.'
+function getSingleLiceTypeCount(req, res, next) {
+    console.log("haiiiiii")
+    var id = parseInt(req.params.id);
+    db.one('select * from lice_type_count where lice_type_count_id = $1', id)
+        .then(function (data) {
+            res.status(200)
+                .json({
+                    status: 'success',
+                    data: data,
+                    message: 'Retrieved ONE',
+                    apidate: new Date()
+                });
+        })
+        .catch(function (err) {
+            res.status(404).json({
+                status: 'error',
+                data: err,
+                message: 'No data found',
+                apidate: new Date()
+            });
         });
-    })
-    .catch(function (err) {
-      return next(err);
-    });
-};
-
-
-function updateLiceCouting(req, res, next) {
-  db.none('update lice_couting set date=$1, temperature=$2, latitude=$3, longitude=$4, lice_count=$5, location_name=$6  where id=$7',
-    [req.body.date, req.body.temperature, parseFloat(req.body.latitude),parseFloat(req.body.longitude),
-      req.body.lice_count,req.body.location_name, parseInt(req.params.id)])
-    .then(function () {
-      res.status(200)
-        .json({
-          status: 'success',
-          message: 'Updated Lice Count'
-        });
-    })
-    .catch(function (err) {
-      return next(err);
-    });
 }
+
+
+
+
+
+
+
+
 
 
 module.exports = {
     getAllLiceCoutings: getAllLiceCoutings,
     getSingleLiceCouting: getSingleLiceCouting,
-    createLiceCouting: createLiceCouting,
-    updateLiceCouting : updateLiceCouting
+    getAllLiceTypeCouting: getAllLiceTypeCouting,
+    getSingleLiceTypeCount:getSingleLiceTypeCount
+ 
 };
 
 
